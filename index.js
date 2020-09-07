@@ -8,6 +8,7 @@ var rfs = require('rotating-file-stream');
 var redis =  require('redis');
 
 var UserController = require('./app/controllers/UserController');
+var YoutubeController = require('./app/controllers/YoutubeController');
 
 redis.createClient();
 
@@ -26,6 +27,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/users', UserController);
+app.use('/youtube', YoutubeController);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);

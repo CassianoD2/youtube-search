@@ -15,7 +15,7 @@ router.get('/',(req, res) => {
 
 
 const UsersPostValidation = [
-    body('email').isEmail().withMessage("Utilize um e-mail válido."),
+    body('email').isEmail().withMessage("Preencha com um e-mail válido."),
     body('password').isLength({min: 6}).withMessage("Deve ter no mínimo 6 caracteres."),
     body('name').exists().withMessage("Preencha o nome.")
 ];
