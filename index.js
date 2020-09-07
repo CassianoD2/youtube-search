@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const port = 3000;
@@ -5,15 +6,15 @@ const port = 3000;
 var morgan = require('morgan');
 var path = require('path');
 var rfs = require('rotating-file-stream');
-var redis =  require('redis');
+//var redis =  require('redis');
 
 var UserController = require('./app/controllers/UserController');
 var YoutubeController = require('./app/controllers/YoutubeController');
 
-redis.createClient();
+//redis.createClient();
 
 var accessLogStream = rfs.createStream('access.log', {
-    interval: '1d', // rotate daily
+    interval: '1d',
     path: path.join(__dirname, 'log')
 });
   
