@@ -6,12 +6,9 @@ const port = 3000;
 var morgan = require('morgan');
 var path = require('path');
 var rfs = require('rotating-file-stream');
-//var redis =  require('redis');
 
 var UserController = require('./app/controllers/UserController');
 var YoutubeController = require('./app/controllers/YoutubeController');
-
-//redis.createClient();
 
 var accessLogStream = rfs.createStream('access.log', {
     interval: '1d',

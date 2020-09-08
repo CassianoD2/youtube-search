@@ -16,9 +16,7 @@ router.get('/search', searchRouteCheck, (req, res) => {
     }
 
 
-    console.log('1 Return');
     youtubeService.search(res, req.query.text);
-    console.log('2 Return');
 });
 
 module.exports = router;
