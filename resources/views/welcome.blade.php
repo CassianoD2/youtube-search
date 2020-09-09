@@ -88,11 +88,25 @@
                 <form action="{{ url('youtube/search') }}" method="GET">
                     <div class="row">
                         <div class="col-12">
-                            <div class="input-group">
+                            <div class="form-group row">
+                                <label for="text" class="col-form-label">Pesquisar vídeo</label>
                                 <input type="text" name="text" class="form-control" placeholder="Pesquisar vídeo">
-                                <div class="input-group-append">
-                                    <button class="btn btn-info" type="submit">GO</button>
-                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="timeView">Tempo de visualização</label>
+                                <select name="timeView" id="timeView" class="form-control">
+                                    <option value="30">30</option>
+                                    <option value="60">60</option>
+                                    <option value="90">90</option>
+                                    <option value="120">120</option>
+                                    <option value="150">150</option>
+                                    <option value="180">180</option>
+                                    <option value="210">210</option>
+                                    <option value="240">240</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-info col-6" type="submit">GO</button>
                             </div>
                         </div>
                     </div>

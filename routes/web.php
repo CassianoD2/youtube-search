@@ -21,8 +21,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
 Route::get('/youtube/search', 'YoutubeController@index');
+
+Route::get('/youtube/regkey', 'YoutubeController@registerApiKey');
+Route::post('/youtube/saveapi', 'YoutubeController@saveApiKey');

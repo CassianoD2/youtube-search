@@ -1,26 +1,58 @@
 @extends('layouts.app')
 
 @section('content')
+    @if (session('saveKey'))
+        <div class="alert alert-success">
+            {{ session('saveKey') }}
+        </div>
+    @endif
+
+    @if (session('errorSaveKey'))
+        <div class="alert alert-success">
+            {{ session('errorSaveKey') }}
+        </div>
+    @endif
+
     <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-12">
+        <div class="row">
+            <div class="col-12">
                 <div class="card">
-                    <div class="card-header">{{ __('Lista de Vídeos') }} - Termo pesquisado: {{ $_GET['text'] }}</div>
+                    <div class="card-header">
+                        {{ __('Lista de Vídeos') }} <br>
+                        @if (isset($_GET['text']))
+                            Termo pesquisado: {{ $_GET['text'] }}
+                        @endif
+                    </div>
                     <div class="card-body">
                         <form action="{{ url('youtube/search') }}" method="GET">
                             <div class="row">
                                 <div class="col-12">
-                                    <div class="input-group">
+                                    <div class="form-group row">
+                                        <label for="text" class="col-form-label">Pesquisar vídeo</label>
                                         <input type="text" name="text" class="form-control" placeholder="Pesquisar vídeo">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-info" type="submit">GO</button>
-                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="timeView">Tempo de visualização</label>
+                                        <select name="timeView" id="timeView" class="form-control">
+                                            <option value="30">30</option>
+                                            <option value="60">60</option>
+                                            <option value="90">90</option>
+                                            <option value="120">120</option>
+                                            <option value="150">150</option>
+                                            <option value="180">180</option>
+                                            <option value="210">210</option>
+                                            <option value="240">240</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 text-center">
+                                        <button class="btn btn-info col-6" type="submit">GO</button>
                                     </div>
                                 </div>
                             </div>
                         </form>
 
-                        @if ($error)
+
+                    @if ($error)
                             <div class="row mt-3">
                                 <div class="col-12">
                                     <div class="text-center alert-danger">
@@ -28,7 +60,7 @@
                                     </div>
                                 </div>
                             </div>
-                        @else
+                    @else
                             <div class="row mt-3 mb-3">
                                 <div class="col-12">
                                     Estatisticas (Palavras que mais aparecem):
@@ -76,7 +108,7 @@
                             @endforeach
                         </div>
 
-                        @endif
+                    @endif
                     </div>
                 </div>
             </div>

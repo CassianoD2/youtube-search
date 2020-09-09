@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Model\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
 
 class YoutubeController extends Controller
 {
@@ -16,20 +18,29 @@ class YoutubeController extends Controller
         $errorMessage = '';
 
         $textToSearch = $request->get('text');
-        if (empty($textToSearch)) {
+        $timeToView = $request->get('timeView');
+
+        $videos = [];
+        $informations = [];
+
+        if (empty($textToSearch)|| empty($timeToView)) {
             $error = true;
             $errorMessage = 'Por favor informe um texto para pesquisa.';
-        }
-
-        $videos = $this->getVideos($textToSearch);
-
-        $informations = [];
-        if (isset($videos['error']) && isset($videos['errorCode'])) {
-            $error = true;
-            $errorMessage = "Limite de consulta diário excedido.";
         } else {
-            $informations = array_slice($this->processInformationForVideo($videos), 0, 5);
+
+            $videos = $this->getVideos($textToSearch);
+
+            $informations = [];
+
+            if (isset($videos['error']) && isset($videos['errorCode'])) {
+                $error = true;
+                $errorMessage = "Limite de consulta diário excedido.
+                \n Para utilizar nosso serviço registre uma chave em sua conta ao se registrar.";
+            } else {
+                $informations = array_slice($this->processInformationForVideo($videos), 0, 5);
+            }
         }
+
 
         return view(
             'youtube/search',
@@ -49,10 +60,15 @@ class YoutubeController extends Controller
      */
     private function getVideos($textToSearch)
     {
+        $apiKey = env("YOUTUBEAPI");
+        if ($user = Auth::user()) {
+            $apiKey = $user->youtube_key;
+        }
+
         $params = [
-            "key" => env("YOUTUBEAPI"),
+            "key" => $apiKey,
             "part" => 'snippet',
-            "maxResults" => 50,
+            "maxResults" => 2,
             "q" => $textToSearch,
             "type" => 'video',
         ];
@@ -62,29 +78,37 @@ class YoutubeController extends Controller
         $consultVideo = function (&$params, &$itemVideo, &$consultVideoReq) {
             $returnVideo = Http::get(self::URL . "search?" . http_build_query($params));
 
-            if ($returnVideo->successful()) {
-                foreach ($returnVideo->json()['items'] as $value) {
-                    $itemVideo[$value['id']['videoId']] = $this->getInfoVideos($value['id']['videoId']);
-                }
-
-                if (isset($returnVideo->json()['nextPageToken'])) {
-                    $params['pageToken'] = $returnVideo->json()['nextPageToken'];
-                }
-
-                if (count($itemVideo) < 200) {
-                    $consultVideoReq($params, $itemVideo, $consultVideoReq);
-                }
-            } else {
-                try {
-                    $returnVideo->throw();
-                } catch (\Exception $e) {
-                    if (!empty($itemVideo)) {
-                        $itemVideo = [];
+            try {
+                if ($returnVideo->successful()) {
+                    foreach ($returnVideo->json()['items'] as $value) {
+                        $itemVideo[$value['id']['videoId']] = $this->getInfoVideos($value['id']['videoId']);
                     }
 
-                    $itemVideo['error'] = $e->getMessage();
-                    $itemVideo['errorCode'] = $e->getCode();
+                    if (isset($returnVideo->json()['nextPageToken'])) {
+                        $params['pageToken'] = $returnVideo->json()['nextPageToken'];
+                    }
+
+                    if (count($itemVideo) < 10) {
+                        $consultVideoReq($params, $itemVideo, $consultVideoReq);
+                    }
+                } else {
+                    try {
+                        $returnVideo->throw();
+                    } catch (\Exception $e) {
+
+                        if (!empty($itemVideo)) {
+                            $itemVideo = [];
+                        }
+
+                        $itemVideo['error'] = $e->getMessage();
+                        $itemVideo['errorCode'] = $e->getCode();
+                        return false;
+                    }
                 }
+            } catch (\Exception $e) {
+                $itemVideo['error'] = $e->getMessage();
+                $itemVideo['errorCode'] = $e->getCode();
+                return false;
             }
         };
 
@@ -110,7 +134,11 @@ class YoutubeController extends Controller
 
         $returnVideo = Http::get(self::URL . "videos?" . http_build_query($params));
 
-        return $returnVideo->json();
+        if ($returnVideo->successful()) {
+            return $returnVideo->json();
+        }else{
+            $returnVideo->throw();
+        }
     }
 
     /**
@@ -159,6 +187,36 @@ class YoutubeController extends Controller
             arsort($statistics);
 
             return $statistics;
+        }
+    }
+
+    /**
+     * Registra a API Key
+     */
+    public function registerApiKey()
+    {
+        if ($user = Auth::user()) {
+            return view('youtube.regkey',[
+                "apiKey" => $user->youtube_key ? $user->youtube_key : ''
+            ]);
+        } else {
+            return redirect('/login');
+        }
+    }
+
+    public function saveApiKey(Request $request)
+    {
+        if ($user = Auth::user()) {
+
+            $userModel = User::findOrFail($user->id);
+            $userModel->youtube_key = $request->post('api_key');
+            if ($userModel->save()) {
+                return redirect('/youtube/search')->with('saveKey', "Chave salva com sucesso!");
+            } else {
+                return redirect('/youtube/search')->with('errorSaveKey', "Não foi possível salvar a chave!");
+            }
+        } else {
+            return redirect('/login');
         }
     }
 }
