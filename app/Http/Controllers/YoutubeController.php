@@ -52,26 +52,43 @@ class YoutubeController extends Controller
         $params = [
             "key" => env("YOUTUBEAPI"),
             "part" => 'snippet',
-            "maxResults" => 2,
+            "maxResults" => 50,
             "q" => $textToSearch,
             "type" => 'video',
         ];
 
         $itemVideo = [];
-        $returnVideo = Http::get(self::URL . "search?" . http_build_query($params));
 
-        if ($returnVideo->successful()) {
-            foreach ($returnVideo->json()['items'] as $value) {
-                $itemVideo[$value['id']['videoId']] = $this->getInfoVideos($value['id']['videoId']);
+        $consultVideo = function (&$params, &$itemVideo, &$consultVideoReq) {
+            $returnVideo = Http::get(self::URL . "search?" . http_build_query($params));
+
+            if ($returnVideo->successful()) {
+                foreach ($returnVideo->json()['items'] as $value) {
+                    $itemVideo[$value['id']['videoId']] = $this->getInfoVideos($value['id']['videoId']);
+                }
+
+                if (isset($returnVideo->json()['nextPageToken'])) {
+                    $params['pageToken'] = $returnVideo->json()['nextPageToken'];
+                }
+
+                if (count($itemVideo) < 200) {
+                    $consultVideoReq($params, $itemVideo, $consultVideoReq);
+                }
+            } else {
+                try {
+                    $returnVideo->throw();
+                } catch (\Exception $e) {
+                    if (!empty($itemVideo)) {
+                        $itemVideo = [];
+                    }
+
+                    $itemVideo['error'] = $e->getMessage();
+                    $itemVideo['errorCode'] = $e->getCode();
+                }
             }
-        } else {
-            try {
-                $returnVideo->throw();
-            } catch (\Exception $e) {
-                $itemVideo['error'] = $e->getMessage();
-                $itemVideo['errorCode'] = $e->getCode();
-            }
-        }
+        };
+
+        $consultVideo($params, $itemVideo, $consultVideo);
 
         return $itemVideo;
     }
