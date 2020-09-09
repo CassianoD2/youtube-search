@@ -68,7 +68,7 @@ class YoutubeController extends Controller
         $params = [
             "key" => $apiKey,
             "part" => 'snippet',
-            "maxResults" => 2,
+            "maxResults" => 50,
             "q" => $textToSearch,
             "type" => 'video',
         ];
@@ -88,7 +88,7 @@ class YoutubeController extends Controller
                         $params['pageToken'] = $returnVideo->json()['nextPageToken'];
                     }
 
-                    if (count($itemVideo) < 10) {
+                    if (count($itemVideo) < 200) {
                         $consultVideoReq($params, $itemVideo, $consultVideoReq);
                     }
                 } else {
