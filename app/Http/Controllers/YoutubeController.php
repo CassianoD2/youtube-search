@@ -126,8 +126,13 @@ class YoutubeController extends Controller
      */
     private function getInfoVideos($videoId)
     {
+        $apiKey = env("YOUTUBEAPI");
+        if ($user = Auth::user()) {
+            $apiKey = $user->youtube_key;
+        }
+        
         $params = [
-            "key" => env("YOUTUBEAPI"),
+            "key" => $apiKey,
             "part" => 'snippet,contentDetails',
             "id" => $videoId
         ];
