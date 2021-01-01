@@ -45,4 +45,29 @@ router.post('/', UsersPostValidation, async (req, res) => {
     }
 });
 
+
+const UserLoginValidation = [
+    body('email').exists().notEmpty().withMessage("Campo e-mail obrigatório."),
+    body('password').exists().notEmpty().withMessage("Campo senha obrigatório")
+];
+
+router.post('/token', UserLoginValidation, async (req, res) => {
+    var errors = validationResult(req);
+
+    if(!errors.isEmpty()) {
+        res.status(400).json({errors: errors.array()});
+        return;
+    }
+
+    const user = await Users.findOne({
+        where: {
+            email: req.body.email
+        }
+    }).then((userResult) => {
+        console.log(userResult.checkPassword(req.body.password));
+    });
+
+    res.json();
+});
+
 module.exports = router;
