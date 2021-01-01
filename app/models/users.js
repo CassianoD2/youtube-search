@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Users',
     hooks: {
       beforeCreate: async user => {
+        console.log('entrou no select');
         let userCheck = await Users.findAll({
           where: {
             email: user.email
@@ -39,12 +40,12 @@ module.exports = (sequelize, DataTypes) => {
         const saltBcrypt = bcrypt.genSaltSync();
         user.password = bcrypt.hashSync(user.password, saltBcrypt);
       }
-    },
-    classMethods: {
-      checkPassword: (encodedPassword, password) => {
-        return bcrypt.compareSync(password, encodedPassword);
-      }
     }
   });
+
+  Users.prototype.checkPassword = function (password) {
+    return bcrypt.compareSync(password, this.password);
+  }
+
   return Users;
 };
