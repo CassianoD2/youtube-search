@@ -22,5 +22,14 @@
   "bugs": {
     "url": "https://github.com/CassianoD2/youtube-search/issues"
   },
-  "homepage": "https://github.com/CassianoD2/youtube-search#readme"
+  "homepage": "https://github.com/CassianoD2/youtube-search#readme",
+  "dependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/node": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.6"
+  }
 }
