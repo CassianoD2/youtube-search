@@ -1,0 +1,26 @@
+{
+  "name": "youtube-search",
+  "version": "1.0.0",
+  "description": "A test for a position of developer in Ahgora",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CassianoD2/youtube-search.git"
+  },
+  "keywords": [
+    "youtube",
+    "search",
+    "test",
+    "developer",
+    "ahgora"
+  ],
+  "author": "Cassiano Erthal de Mesquita",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/CassianoD2/youtube-search/issues"
+  },
+  "homepage": "https://github.com/CassianoD2/youtube-search#readme"
+}
