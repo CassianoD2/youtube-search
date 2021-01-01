@@ -1,4 +1,5 @@
 'use strict';
+import bcrypt from 'bcrypt';
 const {
   Model
 } = require('sequelize');
@@ -21,6 +22,27 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Users',
+    hooks: {
+      beforeCreate: async user => {
+        let userCheck = await Users.findAll({
+          where: {
+            email: user.email
+          }
+        });
+
+        if (userCheck.length > 0) {
+          throw "The e-mail already exist!";
+        }
+
+        const saltBcrypt = bcrypt.genSaltSync();
+        user.password = bcrypt.hashSync(user.password, saltBcrypt);
+      }
+    },
+    classMethods: {
+      checkPassword: (encodedPassword, password) => {
+        return bcrypt.compareSync(password, encodedPassword);
+      }
+    }
   });
   return Users;
 };

@@ -10,7 +10,7 @@ const saltBcrypt = 10;
 router.get('/',(req, res) => {
     //TODO: implement with a flag isAdmin to have access to this information.
     res.status(400).json({error: true, msg: "You don't have permission!"});
-    
+
     // Users.findAll({
     //     attributes: ['name', 'email']
     // })
@@ -35,28 +35,13 @@ router.post('/', UsersPostValidation, async (req, res) => {
     if(!errors.isEmpty()) {
         res.status(400).json({errors: errors.array()});
         return;
-    } else {
-        var userBody = req.body;
-        userBody.password = Bcrypt.hashSync(req.body.password, saltBcrypt);
-    }
-
-    //Check if user exist
-    let checkUser = await Users.findAll({
-        where: {
-            email: req.body.email
-        }
-    });
-
-    if (checkUser.length > 0) {
-        res.status(400).json({error: true, msg: "This e-mail is already used."});
-        return;
     }
 
     try {
-        const user = await Users.create(userBody);
+        const user = await Users.create(req.body);
         res.json({msg: "User created!"});
     } catch (error) {
-        res.status(400).json({error: true, msg: "Something wrong occurred, please try again later", realMsg: error.errors[0].message});
+        res.status(400).json({error: true, msg: error});
     }
 });
 
