@@ -8,12 +8,18 @@ const Bcrypt = require('bcrypt');
 const saltBcrypt = 10;
 
 router.get('/',(req, res) => {
-    Users.findAll()
-        .then(
-            (users) => {
-                res.json(users);
-            }
-        );
+    //TODO: implement with a flag isAdmin to have access to this information.
+    res.status(400).json({error: true, msg: "You don't have permission!"});
+    
+    // Users.findAll({
+    //     attributes: ['name', 'email']
+    // })
+    //     .then(
+    //         (users) => {
+    //             res.json(users);
+    //         }
+    //     );
+    //
 });
 
 
