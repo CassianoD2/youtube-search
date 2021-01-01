@@ -7,7 +7,7 @@ var morgan = require('morgan');
 var path = require('path');
 var rfs = require('rotating-file-stream');
 
-// var UserController = require('./app/controllers/UserController');
+var UserController = require('./app/controllers/UserController');
 // var YoutubeController = require('./app/controllers/YoutubeController');
 
 var accessLogStream = rfs.createStream('access.log', {
@@ -24,7 +24,7 @@ app.get('/', (req, res) => {
   res.json({message: "hello"});
 });
 
-// app.use('/users', UserController);
+app.use('/users', UserController);
 // app.use('/youtube', YoutubeController);
 
 app.listen(port, () => {
