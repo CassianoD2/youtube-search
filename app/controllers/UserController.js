@@ -8,8 +8,6 @@ const { body, validationResult } = require('express-validator');
 const { Users } = require('../models/index');
 const jwt = require('jsonwebtoken');
 
-const saltBcrypt = 10;
-
 const UsersPostValidation = [
     body('email').isEmail().withMessage("Preencha com um e-mail válido."),
     body('password').isLength({min: 6}).withMessage("Deve ter no mínimo 6 caracteres."),
@@ -36,7 +34,7 @@ function verifyJWT(req, res, next){
         next();
     });
 }
- 
+
 router.get('/',(req, res) => {
     //TODO: implement with a flag isAdmin to have access to this information.
     res.status(400).json({error: true, msg: "You don't have permission!"});
