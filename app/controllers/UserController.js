@@ -50,6 +50,7 @@ router.get('/',(req, res) => {
     //
 });
 
+//Route to register a user.
 router.post('/', UsersPostValidation, async (req, res) => {
     var errors = validationResult(req);
 
@@ -66,6 +67,7 @@ router.post('/', UsersPostValidation, async (req, res) => {
     }
 });
 
+//Route to login a user.
 router.post('/token', UserLoginValidation, async (req, res) => {
     var errors = validationResult(req);
 
@@ -106,6 +108,11 @@ router.post('/token', UserLoginValidation, async (req, res) => {
     });
 
     res.json();
+});
+
+//Route to logout.
+router.post('/logout', (req, res) => {
+    return res.json({auth: false, token: null})
 });
 
 module.exports = router;

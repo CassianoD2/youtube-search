@@ -6,20 +6,25 @@
       "host": "127.0.0.1",
       "dialect": "mysql",
       "port": "3306",
-      "jwtsessionkey": "CassianoErthalDeMesquita"
+      "jwtsessionkey": "CassianoErthalDeMesquita",
+      "youtubeapi": "AIzaSyDWTA2Paq9Nf8o1D01JCdwq_TDBcpGsvMQ"
     },
     "test": {
       "username": "root",
       "password": null,
       "database": "database_test",
       "host": "127.0.0.1",
-      "dialect": "mysql"
+      "dialect": "mysql",
+      "jwtsessionkey": "CassianoErthalDeMesquita",
+      "youtubeapi": ""
     },
     "production": {
       "username": "root",
       "password": null,
       "database": "database_production",
       "host": "127.0.0.1",
-      "dialect": "mysql"
+      "dialect": "mysql",
+      "jwtsessionkey": "CassianoErthalDeMesquita",
+      "youtubeapi": ""
     }
   }

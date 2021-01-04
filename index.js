@@ -8,7 +8,7 @@ var path = require('path');
 var rfs = require('rotating-file-stream');
 
 var UserController = require('./app/controllers/UserController');
-// var YoutubeController = require('./app/controllers/YoutubeController');
+var YoutubeController = require('./app/controllers/YoutubeController');
 
 var accessLogStream = rfs.createStream('access.log', {
     interval: '1d',
@@ -25,7 +25,7 @@ app.get('/', (req, res) => {
 });
 
 app.use('/users', UserController);
-// app.use('/youtube', YoutubeController);
+app.use('/youtube', YoutubeController);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
