@@ -7,7 +7,7 @@
       "dialect": "mysql",
       "port": "3306",
       "jwtsessionkey": "CassianoErthalDeMesquita",
-      "youtubeapi": "AIzaSyDWTA2Paq9Nf8o1D01JCdwq_TDBcpGsvMQ"
+      "youtubeapi": ""
     },
     "test": {
       "username": "root",
