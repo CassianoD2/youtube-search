@@ -7,7 +7,6 @@ const config = require(__dirname + '/../../config/config.json')[env];
 const { body, validationResult } = require('express-validator');
 const { Users } = require('../models/index');
 const jwt = require('jsonwebtoken');
-
 const jwtSecret = config['jwtsessionkey'] ? process.env.JWTSESSIONKEY : config['jwtsessionkey'];
 
 const UsersPostValidation = [

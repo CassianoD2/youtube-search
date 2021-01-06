@@ -5,9 +5,9 @@ const config = require(__dirname + '/../../config/config.json')[env];
 const YOUTUBEAPIKEY = config['youtubeapi'] ? process.env.YOUTUBEAPIKEY : config['youtubeapi'];
 
 var youtubeService = {
-    search: (res, text) => {
+    search: (res, text, apiKey) => {
         var params = new URLSearchParams({
-            key: YOUTUBEAPIKEY,
+            key: apiKey ? apiKey : YOUTUBEAPIKEY,
             part: 'snippet',
             maxResults: 50,
             q: text,
@@ -20,7 +20,7 @@ var youtubeService = {
             var params = new URLSearchParams({
                 part: 'snippet, contentDetails',
                 id: videoId,
-                key: YOUTUBEAPIKEY
+                key: apiKey ? apiKey : YOUTUBEAPIKEY
             });
 
             return await axios.get("https://www.googleapis.com/youtube/v3/videos?" + params.toString())
