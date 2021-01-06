@@ -26,7 +26,6 @@ module.exports = (sequelize, DataTypes) => {
     modelName: 'Users',
     hooks: {
       beforeCreate: async user => {
-        console.log('entrou no select');
         let userCheck = await Users.findAll({
           where: {
             email: user.email
